@@ -8,32 +8,8 @@
 #include "pico/stdlib.h"
 #include "hardware/gpio.h"
 #include "main.h"
-
-void btn_callback(uint gpio, uint32_t events) {
-    if (gpio == BTN_PIN_R) {
-        btn_r = !btn_r;
-    } else if (gpio == BTN_PIN_G) {
-        btn_g = !btn_g;
-    } else if (gpio == BTN_PIN_B) {
-        btn_b = !btn_b;
-    } else if (gpio == BTN_PIN_Y) {
-        btn_y = !btn_y;
-    } else if (gpio == BTN_PIN_START) {
-        btn_start = !btn_start;
-    }
-}
-
-void buzzer_sound(int duration_ms, int FREQUENCY) {
-    int delay = 1000000 / (FREQUENCY * 2); // Calcula o atraso necessário para a frequência desejada
-
-    for (int i = 0; i < (duration_ms * 1000) / (delay * 2); i++) {
-        gpio_put(BUZZER_PIN, 1); // Liga o buzzer
-        sleep_us(delay); // Espera meio período
-        gpio_put(BUZZER_PIN, 0); // Desliga o buzzer
-        sleep_us(delay); // Espera meio período
-    }
-}
  
+
 
  int main() {
     stdio_init_all();
@@ -74,12 +50,6 @@ void buzzer_sound(int duration_ms, int FREQUENCY) {
     gpio_init(LED_PIN_Y);
     gpio_set_dir(LED_PIN_Y, GPIO_OUT);
 
-    gpio_init(LED_PIN_PASS);
-    gpio_set_dir(LED_PIN_PASS, GPIO_OUT);
-
-    gpio_init(LED_PIN_FAIL);
-    gpio_set_dir(LED_PIN_FAIL, GPIO_OUT);
-
     // Definindo o Buzzer
 
     gpio_init(BUZZER_PIN);
@@ -93,40 +63,41 @@ void buzzer_sound(int duration_ms, int FREQUENCY) {
     gpio_set_irq_enabled(BTN_PIN_Y, GPIO_IRQ_EDGE_FALL, true);
     gpio_set_irq_enabled(BTN_PIN_START, GPIO_IRQ_EDGE_FALL, true);
     
-    int list[6] = {1,3,2,4,1,3};
+    int list[20] = {1,3,2,4,1,3,2,4,1,3,1,3,2,4,1,3,2,4,1,3};
     while (true) {
         int rodada = 1;
+        int tempo = 250;
         while (btn_start == 1) {
+            sleep_ms(500);
             btn_r = 0;
             btn_g = 0;
             btn_b = 0;
             btn_y = 0;
-            int tempo = 500;
             for (int i = 0; i < rodada; i++) {
                 if (list[i] == 1) {
                     gpio_put(LED_PIN_R, 1);
                     buzzer_sound(200, freq_r);
-                    sleep_ms(500);
+                    sleep_ms(tempo);
                     gpio_put(LED_PIN_R, 0);
-                    sleep_ms(500);
+                    sleep_ms(tempo);
                 } else if (list[i] == 2) {
                     gpio_put(LED_PIN_G, 1);
                     buzzer_sound(200, freq_g);
-                    sleep_ms(500);
+                    sleep_ms(tempo);
                     gpio_put(LED_PIN_G, 0);
-                    sleep_ms(500);
+                    sleep_ms(tempo);
                 } else if (list[i] == 3) {
                     gpio_put(LED_PIN_B, 1);
                     buzzer_sound(200, freq_b);
-                    sleep_ms(500);
+                    sleep_ms(tempo);
                     gpio_put(LED_PIN_B, 0);
-                    sleep_ms(500);
+                    sleep_ms(tempo);
                 } else if (list[i] == 4) {
                     gpio_put(LED_PIN_Y, 1);
                     buzzer_sound(200, freq_y);
-                    sleep_ms(500);
+                    sleep_ms(tempo);
                     gpio_put(LED_PIN_Y, 0);
-                    sleep_ms(500);
+                    sleep_ms(tempo);
                 }
             }           
             for (int i = 0; i < rodada; i++) {
@@ -182,10 +153,42 @@ void buzzer_sound(int duration_ms, int FREQUENCY) {
                     btn_y = 0;
                 }
             }
-            tempo -= 20;
+            
+            tempo -= 23;
             rodada++;
-            if (rodada > sizeof(list)/sizeof(list[0])) {
+
+            if ((rodada > sizeof(list)/sizeof(list[0])) || (btn_start == 0)) {
                 btn_start = 0;
+                gpio_put(LED_PIN_R, 1);
+                gpio_put(LED_PIN_G, 1);
+                gpio_put(LED_PIN_B, 1);
+                gpio_put(LED_PIN_Y, 1);
+                sleep_ms(1000);
+                gpio_put(LED_PIN_R, 0);
+                gpio_put(LED_PIN_G, 0);
+                gpio_put(LED_PIN_B, 0);
+                gpio_put(LED_PIN_Y, 0);
+                sleep_ms(1000);
+            } else {
+                for (int i = 0; i < rodada-1; i++){
+                    gpio_put(LED_PIN_R, 1);
+                    gpio_put(LED_PIN_G, 1);
+                    gpio_put(LED_PIN_B, 1);
+                    gpio_put(LED_PIN_Y, 1);
+                    sleep_ms(200);
+                    gpio_put(LED_PIN_R, 0);
+                    gpio_put(LED_PIN_G, 0);
+                    gpio_put(LED_PIN_B, 0);
+                    gpio_put(LED_PIN_Y, 0);
+                    sleep_ms(200);
+                }
+            }
+        }
+        while (btn_start == 0) {
+            // toca musica
+
+            if (btn_start == 1) {
+                break;
             }
         }
     }
