@@ -8,7 +8,9 @@
 #include "pico/stdlib.h"
 #include "hardware/gpio.h"
 #include "main.h"
- 
+#include <time.h>
+#include <stdlib.h>
+
 
 
  int main() {
@@ -67,8 +69,8 @@
     while (true) {
         int rodada = 1;
         int tempo = 250;
+
         while (btn_start == 1) {
-            sleep_ms(500);
             btn_r = 0;
             btn_g = 0;
             btn_b = 0;
@@ -102,14 +104,18 @@
             }           
             for (int i = 0; i < rodada; i++) {
                 while (!(btn_r == 1 || btn_g == 1 || btn_b == 1 || btn_y == 1)) {
+                    if (btn_start == 0) {
+                        break;
+                    }
                 }
-                if (btn_r == 1) {
+                if (btn_start == 0) {
+                    break;
+                } else if (btn_r == 1) {
                     if (list[i] == 1) {
                         gpio_put(LED_PIN_R, 1);
                         buzzer_sound(200, freq_r);
                         sleep_ms(500);
                         gpio_put(LED_PIN_R, 0);
-                        sleep_ms(500);
                     } else {
                         btn_start = 0;
                         break;
@@ -121,7 +127,6 @@
                         buzzer_sound(200, freq_g);
                         sleep_ms(500);
                         gpio_put(LED_PIN_G, 0);
-                        sleep_ms(500);
                     } else {
                         btn_start = 0;
                         break;
@@ -133,7 +138,6 @@
                         buzzer_sound(200, freq_b);  
                         sleep_ms(500);
                         gpio_put(LED_PIN_B, 0);
-                        sleep_ms(500);
                     } else {
                         btn_start = 0;
                         break;
@@ -145,7 +149,6 @@
                         buzzer_sound(200, freq_y);
                         sleep_ms(500);
                         gpio_put(LED_PIN_Y, 0);
-                        sleep_ms(500);
                     } else {
                         btn_start = 0;
                         break;
@@ -153,6 +156,7 @@
                     btn_y = 0;
                 }
             }
+            sleep_ms(200);
             
             tempo -= 23;
             rodada++;
@@ -169,6 +173,9 @@
                 gpio_put(LED_PIN_B, 0);
                 gpio_put(LED_PIN_Y, 0);
                 sleep_ms(1000);
+                ///for (int i = 0; i < sizeof(list)/sizeof(list[0]); i++) {
+                 ///   list[i] = rand() % 4 + 1;
+                ///}
             } else {
                 for (int i = 0; i < rodada-1; i++){
                     gpio_put(LED_PIN_R, 1);
@@ -182,13 +189,6 @@
                     gpio_put(LED_PIN_Y, 0);
                     sleep_ms(200);
                 }
-            }
-        }
-        while (btn_start == 0) {
-            // toca musica
-
-            if (btn_start == 1) {
-                break;
             }
         }
     }
