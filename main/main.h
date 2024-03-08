@@ -23,6 +23,7 @@ volatile int btn_g = 0;
 volatile int btn_b = 0; 
 volatile int btn_y = 0;
 volatile int btn_start = 0;
+volatile int list[20] = {4,3,2,4,1,3,2,4,1,3,1,3,2,4,1,3,2,4,1,3};
 
 void btn_callback(uint gpio, uint32_t events) {
     if (gpio == BTN_PIN_R) {
@@ -48,5 +49,19 @@ void buzzer_sound(int duration_ms, int FREQUENCY) {
         sleep_us(delay); // Espera meio período
     }
 }
+
+#define NOTE_D4  293
+#define NOTE_A4  440
+#define NOTE_AS4 466
+#define NOTE_G4  392
+#define NOTE_D5  587
+#define REST  0
+
+volatile int melody[] = {
+        // Pirates of the Caribbean - He's a Pirate
+        NOTE_D4, -4, NOTE_A4, -4, NOTE_AS4, -4, NOTE_A4, -4, NOTE_G4, -4, NOTE_D5, -4, NOTE_D4, -4
+    };
+
+volatile int notes = sizeof(melody) / sizeof(int);
 
 #endif
