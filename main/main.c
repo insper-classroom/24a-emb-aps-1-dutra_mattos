@@ -5,7 +5,37 @@
 #include <time.h>
 #include <stdlib.h>
 
+volatile int btn_r = 0;
+volatile int btn_g = 0;
+volatile int btn_b = 0; 
+volatile int btn_y = 0;
+volatile int btn_start = 0;
+volatile int list[20] = {4,3,2,4,1,3,2,4,1,3,1,3,2,4,1,3,2,4,1,3};
 
+void btn_callback(uint gpio, uint32_t events) {
+    if (gpio == BTN_PIN_R) {
+        btn_r = !btn_r;
+    } else if (gpio == BTN_PIN_G) {
+        btn_g = !btn_g;
+    } else if (gpio == BTN_PIN_B) {
+        btn_b = !btn_b;
+    } else if (gpio == BTN_PIN_Y) {
+        btn_y = !btn_y;
+    } else if (gpio == BTN_PIN_START) {
+        btn_start = !btn_start;
+    }
+}
+
+void buzzer_sound(int duration_ms, int FREQUENCY) {
+    int delay = 1000000 / (FREQUENCY * 2); // Calcula o atraso necessário para a frequência desejada
+
+    for (int i = 0; i < (duration_ms * 1000) / (delay * 2); i++) {
+        gpio_put(BUZZER_PIN, 1); // Liga o buzzer
+        sleep_us(delay); // Espera meio período
+        gpio_put(BUZZER_PIN, 0); // Desliga o buzzer
+        sleep_us(delay); // Espera meio período
+    }
+}
 
 int main() {
     stdio_init_all();
