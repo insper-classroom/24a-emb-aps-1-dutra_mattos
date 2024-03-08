@@ -25,11 +25,4 @@
 #define NOTE_D5  587
 #define REST  0
 
-volatile int melody[] = {
-        // Pirates of the Caribbean - He's a Pirate
-        NOTE_D4, -4, NOTE_A4, -4, NOTE_AS4, -4, NOTE_A4, -4, NOTE_G4, -4, NOTE_D5, -4, NOTE_D4, -4
-    };
-
-volatile int notes = sizeof(melody) / sizeof(int);
-
 #endif

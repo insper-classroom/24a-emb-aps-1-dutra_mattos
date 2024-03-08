@@ -12,6 +12,11 @@ volatile int btn_y = 0;
 volatile int btn_start = 0;
 volatile int list[20] = {4,3,2,4,1,3,2,4,1,3,1,3,2,4,1,3,2,4,1,3};
 
+volatile int melody[] = {
+        NOTE_D4, -4, NOTE_A4, -4, NOTE_AS4, -4, NOTE_A4, -4, NOTE_G4, -4, NOTE_D5, -4, NOTE_D4, -4
+    };
+volatile int notes = sizeof(melody) / sizeof(int);
+
 void btn_callback(uint gpio, uint32_t events) {
     if (gpio == BTN_PIN_R) {
         btn_r = !btn_r;
