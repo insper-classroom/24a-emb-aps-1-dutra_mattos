@@ -86,7 +86,7 @@ int main() {
 
     while (true) {
         int rodada = 1;
-        int tempo = 250;
+        double tempo = 250;
 
         for (int i = 0; i < sizeof(list)/sizeof(list[0]); i++) {
             list[i] = rand() % 4 + 1;
@@ -151,9 +151,8 @@ int main() {
                     if (list[i] == 1) {
                         gpio_put(LED_PIN_R, 1);
                         buzzer_sound(200, freq_r);
-                        sleep_ms(500);
+                        sleep_ms(tempo);
                         gpio_put(LED_PIN_R, 0);
-                        sleep_ms(500);
                     } else {
                         btn_start = 0;
                     }
@@ -162,9 +161,8 @@ int main() {
                     if (list[i] == 2) {
                         gpio_put(LED_PIN_G, 1);
                         buzzer_sound(200, freq_g);
-                        sleep_ms(500);
+                        sleep_ms(tempo);
                         gpio_put(LED_PIN_G, 0);
-                        sleep_ms(500);
                     } else {
                         btn_start = 0;
                     }
@@ -173,9 +171,8 @@ int main() {
                     if (list[i] == 3) {
                         gpio_put(LED_PIN_B, 1);
                         buzzer_sound(200, freq_b);  
-                        sleep_ms(500);
+                        sleep_ms(tempo);
                         gpio_put(LED_PIN_B, 0);
-                        sleep_ms(500);
                     } else {
                         btn_start = 0;
                     }
@@ -184,9 +181,8 @@ int main() {
                     if (list[i] == 4) {
                         gpio_put(LED_PIN_Y, 1);
                         buzzer_sound(200, freq_y);
-                        sleep_ms(500);
+                        sleep_ms(tempo);
                         gpio_put(LED_PIN_Y, 0);
-                        sleep_ms(500);
                     } else {
                         btn_start = 0;
                     }
@@ -196,7 +192,7 @@ int main() {
                 }
             }
 
-            tempo -= 23;
+            tempo /= 1.2;
             rodada++;
 
             if ((rodada > sizeof(list)/sizeof(list[0])) || (btn_start == 0)) {
@@ -210,7 +206,7 @@ int main() {
                 gpio_put(LED_PIN_G, 0);
                 gpio_put(LED_PIN_B, 0);
                 gpio_put(LED_PIN_Y, 0);
-                sleep_ms(1000);
+                sleep_ms(200);
                 break;
             } else {
                 for (int i = 0; i < rodada-1; i++){
